@@ -7,75 +7,64 @@ using System.Text;
 using System.Threading;
 
 internal class Host {
-    private static Host host = null;
+
+    private static Host? host = null;
 
     public static void Start(int port) {
         Console.WriteLine(Console.Title = "Host");
+
         try {
-            host = new Host(port);
-            host.initiate();
+            host = new(port);
+        }
+        catch (InvalidOperationException e) {
+            Console.Error.WriteLine(e.Message);
         }
         catch (Exception e) {
-            Console.WriteLine(e.Message);
+            Console.Error.WriteLine(e.Message);
         }
     }
 
-    private TcpListener listener;
-    private TcpClient client;
-    private NetworkStream stream;
-    private string name;
-    private int port;
-    private int ipv4;
+    private readonly TcpListener listener;
+    private readonly TcpClient tcpClient;
+    private readonly NetworkStream stream;
+    private readonly string name;
+    private readonly int port;
 
     private Host(int port) {
-        if (host == null) {
+        if (host is null) {
             Console.WriteLine("Enter a name: ");
-            name = Console.ReadLine();
-            if (string.IsNullOrEmpty(name)) {
-                name = System.Environment.MachineName;
-            }
+            string? name_string = Console.ReadLine();
+            this.name = string.IsNullOrWhiteSpace(name) ? System.Environment.MachineName : name_string.Trim();
 
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
 
+            this.port = port;
+
             Console.WriteLine("Waiting for someone to connect...");
-            client = listener.AcceptTcpClient();
-            stream = client.GetStream();
+            tcpClient = listener.AcceptTcpClient();
+            stream = tcpClient.GetStream();
+
+            Console.WriteLine("Established connection with: {0}", tcpClient);
+
+            Thread receiveThread = new(new ThreadStart(host.ReceiveMessage));
+            receiveThread.Start();
+
+            host.SendMessage();
         }
         else {
-            throw new Exception("Host already exists");
+            throw new InvalidOperationException("Host already exists");
         }
     }
-    private void initiate() {
-        Console.WriteLine("Established connection with: {0}", client);
 
-        Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
-        receiveThread.Start();
-
-        SendMessage();
-    }
-    private static void SendMessage() {
-        Console.WriteLine("Host: {0}");
+    private void SendMessage() {
+        stream.BeginWrite(Encoding.Unicode.GetBytes("Hello, " + name), 0, 64, null, null);
     }
 
     private void ReceiveMessage() {
         try {
-            /*while ((i = stream.Read(bytes, 0, bytes.Length)) != 0) {
-                // Translate data bytes to a ASCII string.
-                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                Console.WriteLine("Received: {0}", data);
-
-                // Process the data sent by the client.
-                data = data.ToUpper();
-
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                // Send back a response.
-                stream.Write(msg, 0, msg.Length);
-                Console.WriteLine("Sent: {0}", data);*/
-
             byte[] msg = new byte[64];
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             int bytes = 0;
             do {
                 bytes = stream.Read(msg, 0, msg.Length);
@@ -93,10 +82,10 @@ internal class Host {
 
     private void Disconnect() {
         stream.Close();
-        client.Close();
+        tcpClient.Close();
         listener.Stop();
     }
-    override public string ToString() {
+    public override string ToString() {
         return String.Format("Host: {0} with IP: {1}", name, listener.Server);
     }
 }

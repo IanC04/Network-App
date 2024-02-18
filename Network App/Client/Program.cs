@@ -8,8 +8,8 @@ using System.Threading;
 namespace MyClient {
     class Program {
         static void Main(string[] args) {
-            string myIp = "192.168.1.70";
-            int port = 3000;
+            string myIp = "160.2.249.152";
+            int port = 49500;
 
             Client client = new Client(myIp, port);
 

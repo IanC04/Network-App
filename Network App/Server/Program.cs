@@ -11,8 +11,8 @@ namespace MyServer {
 
             Console.Title = "SERVER";
 
-            IPAddress myIp = IPAddress.Parse("192.168.1.70");
-            Int32 port = 3000;
+            IPAddress myIp = IPAddress.Parse("160.2.249.152");
+            Int32 port = 49500;
             Server server = new Server(myIp, port);
 
 

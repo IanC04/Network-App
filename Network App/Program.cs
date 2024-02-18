@@ -4,7 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 
 internal partial class Program {
-    /*private static void Main() {
+    private static void Main() {
         Console.WriteLine("Welcome to Ian and David Chat");
 
         Console.WriteLine("Will you be the host or client? 1 for host, 2 for client: ");
@@ -19,7 +19,7 @@ internal partial class Program {
         else {
             Client.Client.Start(port);
         }
-    }*/
+    }
 
     private static bool ParseHost() {
         string? host_string = Console.ReadLine();

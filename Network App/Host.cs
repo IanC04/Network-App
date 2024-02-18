@@ -15,6 +15,11 @@ internal class Host {
 
         try {
             host = new(port);
+
+            Thread receiveThread = new(new ThreadStart(host.ReceiveMessage));
+            receiveThread.Start();
+
+            host.SendMessage();
         }
         catch (InvalidOperationException e) {
             Console.Error.WriteLine(e.Message);
@@ -46,11 +51,6 @@ internal class Host {
             stream = tcpClient.GetStream();
 
             Console.WriteLine("Established connection with: {0}", tcpClient);
-
-            Thread receiveThread = new(new ThreadStart(host.ReceiveMessage));
-            receiveThread.Start();
-
-            host.SendMessage();
         }
         else {
             throw new InvalidOperationException("Host already exists");
@@ -85,7 +85,8 @@ internal class Host {
         tcpClient.Close();
         listener.Stop();
     }
+
     public override string ToString() {
-        return String.Format("Host: {0} with IP: {1}", name, listener.Server);
+        return String.Format("Host: {0} with IP: {1} and Port: {2}", name, listener.Server, port);
     }
 }

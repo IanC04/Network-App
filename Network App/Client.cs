@@ -14,6 +14,11 @@ internal class Client {
     public static void Start(int port) {
         try {
             client = new(port);
+
+            Thread receiveThread = new(new ThreadStart(client.ReceiveMessage));
+            receiveThread.Start();
+
+            client.SendMessage();
         }
         catch (InvalidOperationException e) {
             Console.Error.WriteLine(e.Message);
@@ -44,11 +49,6 @@ internal class Client {
             Console.WriteLine("Established connection with: {0} with IP: {1}", tcpClient, tcpClient.Client.RemoteEndPoint);
 
             stream = tcpClient.GetStream();
-
-            Thread receiveThread = new(new ThreadStart(this.ReceiveMessage));
-            receiveThread.Start();
-
-            SendMessage();
         }
         else {
             throw new InvalidOperationException("Client already exists");
@@ -82,5 +82,9 @@ internal class Client {
     private void Disconnect() {
         stream.Close();
         tcpClient.Close();
+    }
+
+    public override string ToString() {
+        return String.Format("Client: {0} with TCP: {1} and Port: {2}", name, tcpClient, port);
     }
 }

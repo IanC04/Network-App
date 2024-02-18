@@ -1,5 +1,6 @@
 ﻿namespace Host;
 
+using Client;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -19,7 +20,19 @@ internal class Host {
             Thread receiveThread = new(new ThreadStart(host.ReceiveMessage));
             receiveThread.Start();
 
-            host.SendMessage();
+            string message = "Hello, " + host.name + " from host";
+            host.SendMessage(message);
+
+            while (true) {
+                message = Console.ReadLine();
+                if (message == "exit") {
+                    host.SendMessage(message);
+                    host.Disconnect();
+                    break;
+                }
+
+                host.SendMessage(message);
+            }
         }
         catch (InvalidOperationException e) {
             Console.Error.WriteLine(e.Message);
@@ -57,10 +70,10 @@ internal class Host {
         }
     }
 
-    private void SendMessage() {
-        string message = "Hello, " + name + " from host";
+    private void SendMessage(string message) {
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
+        stream.Flush();
     }
 
     private void ReceiveMessage() {

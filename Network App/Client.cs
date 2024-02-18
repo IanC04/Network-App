@@ -18,7 +18,19 @@ internal class Client {
             Thread receiveThread = new(new ThreadStart(client.ReceiveMessage));
             receiveThread.Start();
 
-            client.SendMessage();
+            string message = "Hello, " + client.name + " from client";
+            client.SendMessage(message);
+
+            while (true) {
+                message = Console.ReadLine();
+                if (message == "exit") {
+                    client.SendMessage(message);
+                    client.Disconnect();
+                    break;
+                }
+
+                client.SendMessage(message);
+            }
         }
         catch (InvalidOperationException e) {
             Console.Error.WriteLine(e.Message);
@@ -55,10 +67,10 @@ internal class Client {
         }
     }
 
-    private void SendMessage() {
-        string message = "Hello, " + name + " from client";
+    private void SendMessage(string? message) {
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
+        stream.Flush();
     }
 
     private void ReceiveMessage() {

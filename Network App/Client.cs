@@ -9,12 +9,6 @@ using System.Threading;
 
 internal class Client {
 
-    private readonly TcpClient tcpClient;
-    private readonly NetworkStream stream;
-    private readonly string name;
-    private readonly int port;
-    private readonly IPAddress hostIP;
-
     private static Client? client = null;
 
     public static void Start(int port) {
@@ -29,6 +23,11 @@ internal class Client {
         }
     }
 
+    private readonly TcpClient tcpClient;
+    private readonly NetworkStream stream;
+    private readonly string name;
+    private readonly int port;
+
     private Client(int port) {
         if (client is null) {
             Console.WriteLine("Enter a name: ");
@@ -37,13 +36,11 @@ internal class Client {
 
             tcpClient = new TcpClient();
             Console.WriteLine("Enter the host's IP Address: ");
-            string ipAddressString = Console.ReadLine();
+            string? ipAddressString = Console.ReadLine();
             ipAddressString = string.IsNullOrWhiteSpace(ipAddressString) ? "192.168.0.1" : ipAddressString.Trim();
-            IPAddress hostIP = IPAddress.Parse(ipAddressString);
 
-            Console.WriteLine("You are now connected to host " + hostIP);
-            tcpClient.Connect(hostIP, port);
-            Console.WriteLine("Established connection with: {0}", tcpClient);
+            tcpClient.Connect(IPAddress.Parse(ipAddressString), port);
+            Console.WriteLine("Established connection with: {0} with IP: {1}", tcpClient, tcpClient.Client.RemoteEndPoint);
 
             stream = tcpClient.GetStream();
 

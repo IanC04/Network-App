@@ -39,6 +39,7 @@ internal class Client {
             string? ipAddressString = Console.ReadLine();
             ipAddressString = string.IsNullOrWhiteSpace(ipAddressString) ? "192.168.0.1" : ipAddressString.Trim();
 
+            Console.WriteLine("Connecting to {0} on port {1}", IPAddress.Parse(ipAddressString), port);
             tcpClient.Connect(IPAddress.Parse(ipAddressString), port);
             Console.WriteLine("Established connection with: {0} with IP: {1}", tcpClient, tcpClient.Client.RemoteEndPoint);
 

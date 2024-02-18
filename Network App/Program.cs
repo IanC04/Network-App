@@ -1,5 +1,6 @@
 ﻿namespace Network_App;
 
+using System.Net;
 using System.Text.RegularExpressions;
 
 internal partial class Program {

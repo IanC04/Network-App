@@ -74,21 +74,23 @@ internal class Client {
     }
 
     private void ReceiveMessage() {
-        try {
-            byte[] msg = new byte[64];
-            StringBuilder builder = new();
-            int bytes = 0;
-            do {
-                bytes = stream.Read(msg, 0, msg.Length);
-                builder.Append(Encoding.Unicode.GetString(msg, 0, bytes));
+        while (true) {
+            try {
+                byte[] msg = new byte[64];
+                StringBuilder builder = new();
+                int bytes = 0;
+                do {
+                    bytes = stream.Read(msg, 0, msg.Length);
+                    builder.Append(Encoding.Unicode.GetString(msg, 0, bytes));
+                }
+                while (stream.DataAvailable);
+                string message = builder.ToString();
+                Console.WriteLine(message);
             }
-            while (stream.DataAvailable);
-            string message = builder.ToString();
-            Console.WriteLine(message);
-        }
-        catch {
-            Console.WriteLine("Connection Lost :(");
-            Disconnect();
+            catch {
+                Console.WriteLine("Connection Lost :(");
+                Disconnect();
+            }
         }
     }
 

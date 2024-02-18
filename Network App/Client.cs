@@ -55,9 +55,10 @@ internal class Client {
         }
     }
 
-
     private void SendMessage() {
-        stream.BeginWrite(Encoding.Unicode.GetBytes("Hello, " + name), 0, 64, null, null);
+        string message = "Hello, " + name + " from client";
+        byte[] data = Encoding.Unicode.GetBytes(message);
+        stream.Write(data, 0, data.Length);
     }
 
     private void ReceiveMessage() {

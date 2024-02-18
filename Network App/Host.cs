@@ -58,7 +58,9 @@ internal class Host {
     }
 
     private void SendMessage() {
-        stream.BeginWrite(Encoding.Unicode.GetBytes("Hello, " + name), 0, 64, null, null);
+        string message = "Hello, " + name + " from host";
+        byte[] data = Encoding.Unicode.GetBytes(message);
+        stream.Write(data, 0, data.Length);
     }
 
     private void ReceiveMessage() {

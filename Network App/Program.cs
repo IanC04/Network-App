@@ -1,39 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
+﻿using System.Text.RegularExpressions;
 
-namespace Host
-{
-    internal class Program
-    {
-        private static void Main()
-        {
+namespace Network_App {
+    internal class Program {
+        private static void Main() {
             Console.WriteLine("Welcome to Ian and David Chat");
-            Console.WriteLine("Input the port you have port forwarded with your IP address");
+            Console.WriteLine("Will you be the host or client? 1 for host, 2 for client: ");
 
-            string port_string = Console.ReadLine();
-            int port = string.IsNullOrWhiteSpace(port_string) ? 50000 : int.Parse(port_string);
-          
-            TcpListener host = new TcpListener(IPAddress.Any, port);
-            host.Start();
-            Console.WriteLine("Server has been started with your IP and Port");
+            int input = -1;
+            do {
+                string input_string = Console.ReadLine();
+                if (Regex.IsMatch(input_string, @"(1|2)")) {
+                    input = int.Parse(input_string);
+                }
+                else {
+                    Console.WriteLine("Invalid input. Please enter 1 for host, 2 for client: ");
+                }
+            }
+            while (input != 1 && input != 2);
 
-            TcpClient client = host.AcceptTcpClient();
-            Console.WriteLine("Client has connected to the host");
+            int port = -1;
+            do {
+                string port_string = Console.ReadLine();
+                if (Regex.IsMatch(port_string, @"\d+")) {
+                    port = int.Parse(port_string);
+                }
+                else {
+                    Console.WriteLine("Invalid port. Please enter a 16-bit port between 49152 and 65535");
+                }
+            }
+            while (port < 49152 || port > 65535);
 
-            NetworkStream stream = client.GetStream();
-
-            
-
-            while (true)
-            {
-                string message = Console.ReadLine();
-
+            switch (input) {
+                case 1: Host.Host.Start(port); break;
+                case 2: Client.Client.Start(port); break;
+                default: throw new Exception("Invalid input");
             }
         }
     }

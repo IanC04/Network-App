@@ -7,14 +7,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace Client
-{
-    internal class Program
-    {
-        private static void Main()
-        {
-            Console.WriteLine("Welcome to Ian and David Chat");
-
+namespace Client {
+    internal class Client {
+        public static void Start(int port) {
+            Console.WriteLine(Console.Title = "Client");
         }
     }
 }

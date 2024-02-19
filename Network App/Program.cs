@@ -1,6 +1,5 @@
 ﻿namespace Network_App;
 
-using System.Net;
 using System.Text.RegularExpressions;
 
 internal partial class Program {
@@ -22,8 +21,8 @@ internal partial class Program {
     }
 
     private static bool ParseHost() {
-        string? host_string = Console.ReadLine();
-        if (host_string is not null && HostRegex().IsMatch(host_string)) {
+        string host_string = Console.ReadLine() ?? "";
+        if (HostRegex().IsMatch(host_string)) {
             int input = int.Parse(host_string);
             Console.WriteLine("You are the {0}", input == 1 ? "host" : "client");
             return input == 1;
@@ -36,8 +35,8 @@ internal partial class Program {
     }
 
     private static int ParsePort() {
-        string? port_string = Console.ReadLine();
-        if (port_string is not null && PortRegex().IsMatch(port_string)) {
+        string port_string = Console.ReadLine() ?? "";
+        if (PortRegex().IsMatch(port_string)) {
             int port = int.Parse(port_string);
             if (port >= 49152 && port <= 65535) {
                 return port;

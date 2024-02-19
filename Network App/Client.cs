@@ -1,6 +1,5 @@
 ﻿namespace Client;
 
-using Host;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -23,8 +22,7 @@ internal class Client {
 
             while (client.tcpClient.Connected) {
                 Console.Write("You: ");
-                message = Console.ReadLine();
-                message ??= "";
+                message = Console.ReadLine() ?? "";
                 if (message.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
                     client.SendMessage(message);
                     client.Disconnect();
@@ -42,16 +40,16 @@ internal class Client {
         }
     }
 
-    private static IPAddress parseIPAddress() {
-        string? ipString = Console.ReadLine();
-        if (ipString is not null && IPAddress.TryParse(ipString, out IPAddress? ipAddress)) {
+    private static IPAddress ParseIPAddress() {
+        string ipString = Console.ReadLine() ?? "";
+        if (IPAddress.TryParse(ipString, out IPAddress? ipAddress)) {
             return ipAddress;
         }
         else {
             Console.WriteLine("Invalid IP Address. Please enter a valid IP.");
         }
 
-        return parseIPAddress();
+        return ParseIPAddress();
     }
 
     private readonly TcpClient tcpClient;
@@ -62,12 +60,12 @@ internal class Client {
     private Client(int port) {
         if (client is null) {
             Console.WriteLine("Enter a name: ");
-            string? name_string = Console.ReadLine();
+            string name_string = Console.ReadLine() ?? "";
             this.name = string.IsNullOrWhiteSpace(name_string) ? System.Environment.MachineName : name_string.Trim();
 
             tcpClient = new TcpClient();
             Console.WriteLine("Enter the host's IP Address: ");
-            IPAddress ipAddress = parseIPAddress();
+            IPAddress ipAddress = ParseIPAddress();
 
             Console.WriteLine("Connecting to {0} on port {1}", ipAddress, port);
             tcpClient.Connect(ipAddress, port);
@@ -80,7 +78,7 @@ internal class Client {
         }
     }
 
-    private void SendMessage(string? message) {
+    private void SendMessage(string message) {
         message = this.name + ": " + message;
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
@@ -99,6 +97,11 @@ internal class Client {
                 }
                 while (stream.DataAvailable);
                 string message = builder.ToString();
+                if (message.EndsWith("exit")) {
+                    Disconnect();
+                    break;
+                }
+
                 Console.WriteLine(message);
             }
         }
@@ -112,6 +115,7 @@ internal class Client {
     }
 
     private void Disconnect() {
+        SendMessage("exit");
         stream.Close();
         tcpClient.Close();
     }

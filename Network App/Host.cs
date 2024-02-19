@@ -1,6 +1,5 @@
 ﻿namespace Host;
 
-using Client;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -25,8 +24,7 @@ internal class Host {
 
             while (host.tcpClient.Connected) {
                 Console.Write("You: ");
-                message = Console.ReadLine();
-                message ??= "";
+                message = Console.ReadLine() ?? "";
                 if (message.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
                     host.SendMessage(message);
                     host.Disconnect();
@@ -91,6 +89,11 @@ internal class Host {
                 }
                 while (stream.DataAvailable);
                 string message = builder.ToString();
+                if (message.EndsWith("exit")) {
+                    Disconnect();
+                    break;
+                }
+
                 Console.WriteLine(message);
             }
         }
@@ -104,6 +107,7 @@ internal class Host {
     }
 
     private void Disconnect() {
+        SendMessage("exit");
         stream.Close();
         tcpClient.Close();
         listener.Stop();

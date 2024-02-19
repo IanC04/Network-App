@@ -9,7 +9,7 @@ internal partial class Program {
         bool host = ParseHost();
         int port = ParsePort(49500); // Default: 49500
 
-        Console.WriteLine("You are connecting to host: {0} on port: {1}.", host, port);
+        Console.WriteLine("You are connecting on port: {0}.", port);
 
         if (host) {
             Host.Host.Start(port);

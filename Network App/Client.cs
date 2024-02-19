@@ -21,7 +21,6 @@ internal class Client {
             client.SendMessage(message);
 
             while (client.tcpClient.Connected) {
-                Console.Write("You: ");
                 message = Console.ReadLine() ?? "";
                 if (message.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
                     client.SendMessage(message);
@@ -30,6 +29,7 @@ internal class Client {
                 }
 
                 client.SendMessage(message);
+                Console.Write("You: ");
             }
         }
         catch (InvalidOperationException e) {
@@ -40,7 +40,11 @@ internal class Client {
         }
     }
 
-    private static IPAddress ParseIPAddress() {
+    private static IPAddress ParseIPAddress(string? defaultIPAddress) {
+        if (defaultIPAddress is not null) {
+            return IPAddress.Parse(defaultIPAddress);
+        }
+
         string ipString = Console.ReadLine() ?? "";
         if (IPAddress.TryParse(ipString, out IPAddress? ipAddress)) {
             return ipAddress;
@@ -49,7 +53,7 @@ internal class Client {
             Console.WriteLine("Invalid IP Address. Please enter a valid IP.");
         }
 
-        return ParseIPAddress();
+        return ParseIPAddress(null);
     }
 
     private readonly TcpClient tcpClient;
@@ -63,9 +67,11 @@ internal class Client {
             string name_string = Console.ReadLine() ?? "";
             this.name = string.IsNullOrWhiteSpace(name_string) ? System.Environment.MachineName : name_string.Trim();
 
+            this.port = port;
+
             tcpClient = new TcpClient();
             Console.WriteLine("Enter the host's IP Address: ");
-            IPAddress ipAddress = ParseIPAddress();
+            IPAddress ipAddress = ParseIPAddress("160.2.249.152");
 
             Console.WriteLine("Connecting to {0} on port {1}", ipAddress, port);
             tcpClient.Connect(ipAddress, port);

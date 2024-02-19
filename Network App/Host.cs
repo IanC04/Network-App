@@ -23,7 +23,6 @@ internal class Host {
             host.SendMessage(message);
 
             while (host.tcpClient.Connected) {
-                Console.Write("You: ");
                 message = Console.ReadLine() ?? "";
                 if (message.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
                     host.SendMessage(message);
@@ -32,6 +31,7 @@ internal class Host {
                 }
 
                 host.SendMessage(message);
+                Console.Write("You: ");
             }
         }
         catch (InvalidOperationException e) {
@@ -57,7 +57,7 @@ internal class Host {
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
 
-            this.port = port;
+            this.port = port; 
 
             Console.WriteLine("Waiting for someone to connect...");
             tcpClient = listener.AcceptTcpClient();

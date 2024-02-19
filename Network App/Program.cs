@@ -10,7 +10,7 @@ internal partial class Program {
         bool host = ParseHost();
 
         Console.WriteLine("Enter a port number between 49152 and 65535: ");
-        int port = ParsePort();
+        int port = ParsePort(49500);
 
         if (host) {
             Host.Host.Start(port);
@@ -34,7 +34,11 @@ internal partial class Program {
         return ParseHost();
     }
 
-    private static int ParsePort() {
+    private static int ParsePort(int? defaultPort) {
+        if (defaultPort is not null) {
+            return (int) defaultPort;
+        }
+
         string port_string = Console.ReadLine() ?? "";
         if (PortRegex().IsMatch(port_string)) {
             int port = int.Parse(port_string);
@@ -49,7 +53,7 @@ internal partial class Program {
             Console.WriteLine("Invalid port. Please enter a port number between 49152 and 65535.");
         }
 
-        return ParsePort();
+        return ParsePort(null);
     }
 
     [GeneratedRegex(@"^\s*(1|2)\s*$")]

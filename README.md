@@ -1,5 +1,7 @@
 # Network App
 This is a simple network app that allows users to send messages to each other. It is built using Console app in C#.
+Navigate to the [Releases](https://github.com/IanC04/Network-App/tags) folder and download the chosesn release.
+Run the 'Network App.exe' file to start the app.
 
 ## Contributors
 - [Ian Chen]

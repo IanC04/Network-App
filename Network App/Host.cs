@@ -31,7 +31,6 @@ internal class Host {
                 }
 
                 host.SendMessage(message);
-                Console.Write("You: ");
             }
         }
         catch (InvalidOperationException e) {

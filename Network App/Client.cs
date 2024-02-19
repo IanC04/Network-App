@@ -29,7 +29,6 @@ internal class Client {
                 }
 
                 client.SendMessage(message);
-                Console.Write("You: ");
             }
         }
         catch (InvalidOperationException e) {

@@ -24,6 +24,7 @@ internal class Host {
             host.SendMessage(message);
 
             while (true) {
+                Console.Write("You: ");
                 message = Console.ReadLine();
                 if (message.Trim().ToLower() == "exit") {
                     host.SendMessage(message);
@@ -31,7 +32,6 @@ internal class Host {
                     break;
                 }
 
-                message = host.name + ": " + message;
                 host.SendMessage(message);
             }
         }
@@ -72,6 +72,7 @@ internal class Host {
     }
 
     private void SendMessage(string message) {
+        message = host.name + ": " + message;
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
         stream.Flush();

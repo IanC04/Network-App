@@ -22,6 +22,7 @@ internal class Client {
             client.SendMessage(message);
 
             while (true) {
+                Console.Write("You: ");
                 message = Console.ReadLine();
                 if (message.Trim().ToLower() == "exit") {
                     client.SendMessage(message);
@@ -29,7 +30,6 @@ internal class Client {
                     break;
                 }
 
-                message = client.name+ ": " + message;
                 client.SendMessage(message);
             }
         }
@@ -69,6 +69,7 @@ internal class Client {
     }
 
     private void SendMessage(string? message) {
+        message = client.name + ": " + message;
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
         stream.Flush();

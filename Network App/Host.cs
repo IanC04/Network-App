@@ -26,10 +26,8 @@ internal class Host {
             while (true) {
                 Console.Write("You: ");
                 message = Console.ReadLine();
-                if (message is null) {
-                    message = "";
-                }
-                if (message.Trim().ToLower() == "exit") {
+                message ??= "";
+                if (message.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
                     host.SendMessage(message);
                     host.Disconnect();
                     break;
@@ -75,7 +73,7 @@ internal class Host {
     }
 
     private void SendMessage(string message) {
-        message = host.name + ": " + message;
+        message = this.name + ": " + message;
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
         stream.Flush();
@@ -93,6 +91,9 @@ internal class Host {
                 }
                 while (stream.DataAvailable);
                 string message = builder.ToString();
+                if (message.Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
+                    Disconnect();
+                }
                 Console.WriteLine(message);
             }
         }
@@ -106,6 +107,8 @@ internal class Host {
     }
 
     private void Disconnect() {
+        SendMessage("Other user has disconnected from you.");
+        SendMessage("exit");
         stream.Close();
         tcpClient.Close();
         listener.Stop();

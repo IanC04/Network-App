@@ -24,10 +24,8 @@ internal class Client {
             while (true) {
                 Console.Write("You: ");
                 message = Console.ReadLine();
-                if (message is null) {
-                    message = "";
-                }
-                if (message.Trim().ToLower() == "exit") {
+                message ??= "";
+                if (message.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
                     client.SendMessage(message);
                     client.Disconnect();
                     break;
@@ -83,7 +81,7 @@ internal class Client {
     }
 
     private void SendMessage(string? message) {
-        message = client.name + ": " + message;
+        message = this.name + ": " + message;
         byte[] data = Encoding.Unicode.GetBytes(message);
         stream.Write(data, 0, data.Length);
         stream.Flush();
@@ -101,6 +99,9 @@ internal class Client {
                 }
                 while (stream.DataAvailable);
                 string message = builder.ToString();
+                if (message.Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
+                    Disconnect();
+                }
                 Console.WriteLine(message);
             }
         }
@@ -114,6 +115,8 @@ internal class Client {
     }
 
     private void Disconnect() {
+        SendMessage("Other user has disconnected from you.");
+        SendMessage("exit");
         stream.Close();
         tcpClient.Close();
     }

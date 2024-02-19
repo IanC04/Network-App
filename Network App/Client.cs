@@ -44,6 +44,18 @@ internal class Client {
         }
     }
 
+    private static IPAddress parseIPAddress() {
+        string? ipString = Console.ReadLine();
+        if (ipString is not null && IPAddress.TryParse(ipString, out IPAddress? ipAddress)) {
+            return ipAddress;
+        }
+        else {
+            Console.WriteLine("Invalid IP Address. Please enter a valid IP.");
+        }
+
+        return parseIPAddress();
+    }
+
     private readonly TcpClient tcpClient;
     private readonly NetworkStream stream;
     private readonly string name;
@@ -57,11 +69,10 @@ internal class Client {
 
             tcpClient = new TcpClient();
             Console.WriteLine("Enter the host's IP Address: ");
-            string? ipAddressString = Console.ReadLine();
-            ipAddressString = string.IsNullOrWhiteSpace(ipAddressString) ? "192.168.0.1" : ipAddressString.Trim();
+            IPAddress ipAddress = parseIPAddress();
 
-            Console.WriteLine("Connecting to {0} on port {1}", IPAddress.Parse(ipAddressString), port);
-            tcpClient.Connect(IPAddress.Parse(ipAddressString), port);
+            Console.WriteLine("Connecting to {0} on port {1}", ipAddress, port);
+            tcpClient.Connect(ipAddress, port);
             Console.WriteLine("Established connection with: {0} with IP: {1}", tcpClient, tcpClient.Client.RemoteEndPoint);
 
             stream = tcpClient.GetStream();

@@ -21,7 +21,7 @@ internal class Client {
             string message = "You are connected to " + client.name + ", say hi!";
             client.SendMessage(message);
 
-            while (true) {
+            while (client.tcpClient.Connected) {
                 Console.Write("You: ");
                 message = Console.ReadLine();
                 message ??= "";
@@ -99,9 +99,6 @@ internal class Client {
                 }
                 while (stream.DataAvailable);
                 string message = builder.ToString();
-                if (message.Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
-                    Disconnect();
-                }
                 Console.WriteLine(message);
             }
         }
@@ -115,8 +112,6 @@ internal class Client {
     }
 
     private void Disconnect() {
-        SendMessage("Other user has disconnected from you.");
-        SendMessage("exit");
         stream.Close();
         tcpClient.Close();
     }

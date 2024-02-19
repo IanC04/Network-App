@@ -23,7 +23,7 @@ internal class Host {
             string message = "You are connected to " + host.name + ", say hi!";
             host.SendMessage(message);
 
-            while (true) {
+            while (host.tcpClient.Connected) {
                 Console.Write("You: ");
                 message = Console.ReadLine();
                 message ??= "";
@@ -91,9 +91,6 @@ internal class Host {
                 }
                 while (stream.DataAvailable);
                 string message = builder.ToString();
-                if (message.Equals("exit", StringComparison.CurrentCultureIgnoreCase)) {
-                    Disconnect();
-                }
                 Console.WriteLine(message);
             }
         }
@@ -107,8 +104,6 @@ internal class Host {
     }
 
     private void Disconnect() {
-        SendMessage("Other user has disconnected from you.");
-        SendMessage("exit");
         stream.Close();
         tcpClient.Close();
         listener.Stop();

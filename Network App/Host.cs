@@ -20,17 +20,18 @@ internal class Host {
             Thread receiveThread = new(new ThreadStart(host.ReceiveMessage));
             receiveThread.Start();
 
-            string message = "Hello, " + host.name + " from host";
+            string message = "You are connected to " + host.name + ", say hi!";
             host.SendMessage(message);
 
             while (true) {
                 message = Console.ReadLine();
-                if (message == "exit") {
+                if (message.Trim().ToLower() == "exit") {
                     host.SendMessage(message);
                     host.Disconnect();
                     break;
                 }
 
+                message = host.name + ": " + message;
                 host.SendMessage(message);
             }
         }

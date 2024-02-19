@@ -18,17 +18,18 @@ internal class Client {
             Thread receiveThread = new(new ThreadStart(client.ReceiveMessage));
             receiveThread.Start();
 
-            string message = "Hello, " + client.name + " from client";
+            string message = "You are connected to " + client.name + ", say hi!";
             client.SendMessage(message);
 
             while (true) {
                 message = Console.ReadLine();
-                if (message == "exit") {
+                if (message.Trim().ToLower() == "exit") {
                     client.SendMessage(message);
                     client.Disconnect();
                     break;
                 }
 
+                message = client.name+ ": " + message;
                 client.SendMessage(message);
             }
         }

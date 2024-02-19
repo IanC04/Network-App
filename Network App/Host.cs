@@ -26,6 +26,9 @@ internal class Host {
             while (true) {
                 Console.Write("You: ");
                 message = Console.ReadLine();
+                if (message is null) {
+                    message = "";
+                }
                 if (message.Trim().ToLower() == "exit") {
                     host.SendMessage(message);
                     host.Disconnect();
@@ -79,8 +82,8 @@ internal class Host {
     }
 
     private void ReceiveMessage() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 byte[] msg = new byte[64];
                 StringBuilder builder = new();
                 int bytes = 0;
@@ -92,10 +95,10 @@ internal class Host {
                 string message = builder.ToString();
                 Console.WriteLine(message);
             }
-            catch {
-                Console.WriteLine("Connection Lost :(");
-                Disconnect();
-            }
+        }
+        catch {
+            Console.WriteLine("Connection Lost :(");
+            Disconnect();
         }
     }
 

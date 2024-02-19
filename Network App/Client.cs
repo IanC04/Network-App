@@ -91,7 +91,7 @@ internal class Client {
 
     private void ReceiveMessage() {
         try {
-            while (true) {
+            while (tcpClient.Connected) {
                 byte[] msg = new byte[64];
                 StringBuilder builder = new();
                 int bytes = 0;
@@ -107,6 +107,9 @@ internal class Client {
         catch {
             Console.WriteLine("Connection Lost :'(");
             Disconnect();
+        }
+        finally {
+            Console.WriteLine("Disconnected");
         }
     }
 

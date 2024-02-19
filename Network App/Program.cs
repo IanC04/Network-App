@@ -6,10 +6,8 @@ internal partial class Program {
     private static void Main() {
         Console.WriteLine("Welcome to Ian and David Chat");
 
-        Console.WriteLine("Will you be the host or client? 1 for host, 2 for client: ");
         bool host = ParseHost();
 
-        Console.WriteLine("Enter a port number between 49152 and 65535: ");
         int port = ParsePort(49500);
 
         if (host) {
@@ -21,6 +19,8 @@ internal partial class Program {
     }
 
     private static bool ParseHost() {
+        Console.WriteLine("Enter 1 for host, 2 for client: ");
+
         string host_string = Console.ReadLine() ?? "";
         if (HostRegex().IsMatch(host_string)) {
             int input = int.Parse(host_string);
@@ -28,7 +28,7 @@ internal partial class Program {
             return input == 1;
         }
         else {
-            Console.WriteLine("Invalid input. Please enter 1 for host, 2 for client.");
+            Console.WriteLine("Invalid input.");
         }
 
         return ParseHost();
@@ -39,6 +39,7 @@ internal partial class Program {
             return (int) defaultPort;
         }
 
+        Console.WriteLine("Please enter a port number between 49152 and 65535: ");
         string port_string = Console.ReadLine() ?? "";
         if (PortRegex().IsMatch(port_string)) {
             int port = int.Parse(port_string);
@@ -46,11 +47,11 @@ internal partial class Program {
                 return port;
             }
             else {
-                Console.WriteLine("Port number out of bounds. Please enter: [49152 : 65535].");
+                Console.WriteLine("Port number out of bounds.");
             }
         }
         else {
-            Console.WriteLine("Invalid port. Please enter a port number between 49152 and 65535.");
+            Console.WriteLine("Invalid port.");
         }
 
         return ParsePort(null);

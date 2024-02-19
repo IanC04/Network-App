@@ -45,6 +45,7 @@ internal class Client {
             return IPAddress.Parse(defaultIPAddress);
         }
 
+        Console.WriteLine("Enter the host's IP Address: ");
         string ipString = Console.ReadLine() ?? "";
         if (IPAddress.TryParse(ipString, out IPAddress? ipAddress)) {
             return ipAddress;
@@ -70,7 +71,6 @@ internal class Client {
             this.port = port;
 
             tcpClient = new TcpClient();
-            Console.WriteLine("Enter the host's IP Address: ");
             IPAddress ipAddress = ParseIPAddress("160.2.249.152");
 
             Console.WriteLine("Connecting to {0} on port {1}", ipAddress, port);

@@ -53,7 +53,7 @@ internal class Host {
         if (host is null) {
             Console.WriteLine("Enter a name: ");
             string? name_string = Console.ReadLine();
-            this.name = string.IsNullOrWhiteSpace(name) ? System.Environment.MachineName : name_string.Trim();
+            this.name = string.IsNullOrWhiteSpace(name_string) ? System.Environment.MachineName : name_string.Trim();
 
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();

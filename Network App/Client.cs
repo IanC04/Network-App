@@ -50,7 +50,7 @@ internal class Client {
         if (client is null) {
             Console.WriteLine("Enter a name: ");
             string? name_string = Console.ReadLine();
-            this.name = string.IsNullOrWhiteSpace(name) ? System.Environment.MachineName : name_string.Trim();
+            this.name = string.IsNullOrWhiteSpace(name_string) ? System.Environment.MachineName : name_string.Trim();
 
             tcpClient = new TcpClient();
             Console.WriteLine("Enter the host's IP Address: ");
@@ -89,7 +89,7 @@ internal class Client {
                 Console.WriteLine(message);
             }
             catch {
-                Console.WriteLine("Connection Lost :(");
+                Console.WriteLine("Connection Lost :'(");
                 Disconnect();
             }
         }

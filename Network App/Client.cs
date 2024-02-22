@@ -70,7 +70,7 @@ internal class Client {
             this.port = port;
 
             tcpClient = new TcpClient();
-            IPAddress ipAddress = ParseIPAddress(null); // Default: 192.168.0.1; Default for Debugging: 160.2.249.152
+            IPAddress ipAddress = ParseIPAddress(null); // Default: 192.168.0.1
 
             Console.WriteLine("Connecting to {0} on port {1}", ipAddress, port);
             tcpClient.Connect(ipAddress, port);
